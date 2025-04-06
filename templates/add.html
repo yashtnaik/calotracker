@@ -2,16 +2,33 @@
 <html>
 <head>
   <title>Add Meal</title>
+  <script>
+    function updateCalories() {
+      const meals = {{ meals | tojson }};
+      const selectedMeal = document.getElementById("meal").value;
+      const qty = parseInt(document.getElementById("quantity").value) || 1;
+      const calories = meals[selectedMeal] * qty;
+      document.getElementById("calorieDisplay").innerText = calories + " kcal";
+    }
+  </script>
 </head>
 <body>
-  <h1>Add New Meal</h1>
+  <h1>Add Indian Meal</h1>
   <form method="post">
-    <label>Meal Name:</label><br>
-    <input type="text" name="name"><br><br>
-    <label>Calories:</label><br>
-    <input type="number" name="calories"><br><br>
+    <label>Select Meal:</label><br>
+    <select id="meal" name="name" onchange="updateCalories()">
+      {% for meal in meals %}
+        <option value="{{ meal }}">{{ meal }}</option>
+      {% endfor %}
+    </select><br><br>
+
+    <label>Quantity:</label><br>
+    <input type="number" name="quantity" id="quantity" value="1" min="1" onchange="updateCalories()"><br><br>
+
+    <strong>Calories: <span id="calorieDisplay">100 kcal</span></strong><br><br>
+
     <input type="submit" value="Add Meal">
   </form>
-  <p><a href="/">Back to Tracker</a></p>
+  <p><a href="/">← Back</a></p>
 </body>
 </html>
