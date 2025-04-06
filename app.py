@@ -20,7 +20,7 @@ PREDEFINED_MEALS = {
     "Masala Dosa": 400,
     "Upma": 180,
     "Poha": 220,
-    "Aloo Puri": 500
+    "Aloo Puri": 500,
     "Apple": 56,
     "Avocado Pear": 190,
     "Banana": 95,
