@@ -1,28 +1,52 @@
+:root {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --header-bg: #1f1f1f;
+    --highlight: #76ff03;
+    --card-bg: #1e1e1e;
+    --input-bg: #2c2c2c;
+    --table-header-bg: #333;
+    --progress-bg: #333;
+    --chart-bg: #2c2c2c;
+}
+
+body.light-theme {
+    --bg-color: #f7fff7;
+    --text-color: #333;
+    --header-bg: #e3fcec;
+    --highlight: #2e7d32;
+    --card-bg: #fffef0;
+    --input-bg: #f0fff4;
+    --table-header-bg: #f5f5f5;
+    --progress-bg: #ddd;
+    --chart-bg: #f0fff4;
+}
+
 body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
     font-family: 'Segoe UI', sans-serif;
-    background-color: #121212;
-    color: #e0e0e0;
     margin: 0;
     padding: 0;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 header {
-    background-color: #1f1f1f;
-    color: #76ff03;
+    background-color: var(--header-bg);
+    color: var(--highlight);
     padding: 1.5rem 1rem;
     text-align: center;
     font-size: 1.8rem;
     font-weight: bold;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .container {
     padding: 2rem;
-    background-color: #1e1e1e;
+    background-color: var(--card-bg);
     border-radius: 12px;
     margin: 2rem auto;
     max-width: 900px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
 form {
@@ -34,9 +58,9 @@ form {
 }
 
 input, select, button {
-    background-color: #2c2c2c;
-    color: #e0e0e0;
-    border: 1px solid #333;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border: 1px solid #888;
     border-radius: 6px;
     padding: 10px;
 }
@@ -46,46 +70,58 @@ input::placeholder {
 }
 
 button, .btn {
-    background-color: #76ff03;
+    background-color: var(--highlight);
     color: #000;
     font-weight: bold;
 }
 
 button:hover, .btn:hover {
-    background-color: #64dd17;
+    filter: brightness(1.1);
 }
 
 .table {
-    color: #eee;
+    color: var(--text-color);
 }
 
 .table-light {
-    background-color: #333;
-    color: #eee;
+    background-color: var(--table-header-bg);
+    color: var(--text-color);
 }
 
 .modal-content {
-    background-color: #1f1f1f;
-    color: #eee;
+    background-color: var(--card-bg);
+    color: var(--text-color);
 }
 
 .progress {
-    background-color: #333;
+    background-color: var(--progress-bg);
 }
 
 .progress-bar {
-    background-color: #76ff03;
+    background-color: var(--highlight);
 }
 
 .chart-container {
-    background-color: #2c2c2c;
+    background-color: var(--chart-bg);
     padding: 1rem;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    margin-top: 2rem;
 }
 
-@media (max-width: 768px) {
-    form {
-        grid-template-columns: 1fr;
-    }
+.theme-toggle {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: 2px solid var(--highlight);
+    color: var(--highlight);
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.theme-toggle:hover {
+    background: var(--highlight);
+    color: #000;
 }
