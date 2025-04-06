@@ -2,11 +2,36 @@ from flask import Flask, request, jsonify, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from collections import defaultdict
+from flask_login import UserMixin
+from flask_login import LoginManager
+from models import db, User 
+from flask import render_template, redirect, url_for, request, flash
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import login_user, logout_user, login_required, current_user
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///meals.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app = Flask(__name__)
+app.secret_key = 'supersecretkey'  # use env var in production
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///calories.db'
+
 db = SQLAlchemy(app)
+db = SQLAlchemy()
+db.init_app(app)
+
+login_manager = LoginManager()
+login_manager.login_view = 'login'
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id)
+                          
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)
 
 DAILY_GOAL = 2000
 
@@ -84,6 +109,42 @@ class Meal(db.Model):
 
 # with app.app_context():
 #     db.create_all()
+
+@app.route('/')
+@login_required
+def index():
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = generate_password_hash(request.form['password'])
+        if User.query.filter_by(username=username).first():
+            flash("Username already exists.")
+            return redirect(url_for('register'))
+        user = User(username=username, password=password)
+        db.session.add(user)
+        db.session.commit()
+        flash("Registered successfully!")
+        return redirect(url_for('login'))
+    return render_template('register.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        user = User.query.filter_by(username=request.form['username']).first()
+        if user and check_password_hash(user.password, request.form['password']):
+            login_user(user)
+            return redirect(url_for('index'))
+        flash("Invalid credentials")
+    return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash("Logged out!")
+    return redirect(url_for('login'))
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
