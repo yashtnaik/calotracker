@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from collections import defaultdict
+from datetime import timedelta
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///calories.db'
@@ -46,8 +48,27 @@ INDIAN_MEALS = {
 @app.route('/')
 def index():
     meals = Meal.query.order_by(Meal.date.desc()).all()
-    total_calories = sum(meal.calories for meal in meals)
-    return render_template('index.html', meals=meals, total=total_calories)
+    total = sum(meal.calories for meal in meals)
+
+    # Group calories by date (last 7 days)
+    today = datetime.utcnow().date()
+    daily_data = defaultdict(int)
+
+    for meal in meals:
+        day = meal.date.date()
+        if (today - day).days < 7:
+            daily_data[day] += meal.calories
+
+    # Prepare data for Chart.js
+    labels = []
+    values = []
+
+    for i in range(6, -1, -1):
+        day = today - timedelta(days=i)
+        labels.append(day.strftime("%a"))  # e.g., 'Mon', 'Tue'
+        values.append(daily_data.get(day, 0))
+
+    return render_template("index.html", meals=meals, total=total, labels=labels, values=values)
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_meal():
