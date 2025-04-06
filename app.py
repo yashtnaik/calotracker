@@ -185,6 +185,12 @@ def index():
                            start_date=start_date,
                            end_date=end_date)
 
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash("You have been logged out.", "info")
+    return redirect(url_for('login'))
 
 @app.route('/edit/<int:id>', methods=['POST'])
 @login_required

@@ -11,7 +11,10 @@
 <body class="bg-light">
     <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
     <header>
-        🍛 Calorie Tracker Dashboard
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>🍛 Calorie Tracker Dashboard</h2>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">Logout</a>
+        </div>        
     </header>
     
 <div class="container py-4">
