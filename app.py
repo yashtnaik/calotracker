@@ -39,9 +39,9 @@ INDIAN_MEALS = {
 
 # Routes
 
-@app.before_first_request
-def create_tables():
-    db.create_all()
+# @app.before_first_request
+# def create_tables():
+#     db.create_all()
 
 @app.route('/')
 def index():
@@ -80,4 +80,6 @@ def add_meal_api():
     return jsonify(meal.serialize()), 201
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(host='0.0.0.0', port=5000)
