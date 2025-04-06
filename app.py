@@ -32,9 +32,9 @@ class Meal(db.Model):
     calories = db.Column(db.Integer, nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
 
-@app.before_first_request
-def create_tables():
-    db.create_all()
+# @app.before_first_request
+# def create_tables():
+#     db.create_all()
 
 @app.route('/')
 def index():
@@ -89,4 +89,7 @@ def delete(meal_id):
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    with app.app_context():
+        db.create_all()
+    app.run(host='0.0.0.0', port=5000)
+
