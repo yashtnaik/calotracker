@@ -1,29 +1,27 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime, timedelta
-from collections import defaultdict
+from datetime import datetime, date
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///meals.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# Predefined Indian meals and their calories
+DAILY_GOAL = 2000
+
 PREDEFINED_MEALS = {
-    "Roti": 100,
-    "Rice": 200,
-    "Dal": 150,
-    "Paneer": 250,
-    "Chicken Curry": 300,
-    "Fish Curry": 280,
-    "Chole": 220,
-    "Rajma": 240,
-    "Dosa": 180,
-    "Idli": 70,
-    "Upma": 150,
-    "Sambar": 120,
-    "Poha": 160,
-    "Paratha": 250
+    'Roti (1)': 100,
+    'Rice (1 cup)': 200,
+    'Dal (1 cup)': 150,
+    'Paneer Curry (1 cup)': 300,
+    'Chicken Curry (1 cup)': 350,
+    'Samosa': 250,
+    'Dosa': 200,
+    'Idli (2)': 120,
+    'Poha': 180,
+    'Upma': 170,
+    'Banana': 105,
+    'Apple': 95
 }
 
 class Meal(db.Model):
@@ -32,61 +30,32 @@ class Meal(db.Model):
     calories = db.Column(db.Integer, nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
 
-# @app.before_first_request
-# def create_tables():
+# with app.app_context():
 #     db.create_all()
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    meals = Meal.query.order_by(Meal.date.desc()).all()
-    total = sum(meal.calories for meal in meals)
-
-    today = datetime.utcnow().date()
-    daily_data = defaultdict(int)
-
-    for meal in meals:
-        day = meal.date.date()
-        if (today - day).days < 7:
-            daily_data[day] += meal.calories
-
-    labels = []
-    values = []
-    for i in range(6, -1, -1):
-        day = today - timedelta(days=i)
-        labels.append(day.strftime("%a"))
-        values.append(daily_data.get(day, 0))
-
-    return render_template("index.html", meals=meals, total=total, labels=labels, values=values)
-
-@app.route('/add', methods=['GET', 'POST'])
-def add():
     if request.method == 'POST':
         name = request.form['name']
         quantity = int(request.form.get('quantity', 1))
         calories = PREDEFINED_MEALS.get(name, 0) * quantity
-        new_meal = Meal(name=name, calories=calories)
-        db.session.add(new_meal)
+        meal = Meal(name=name, calories=calories)
+        db.session.add(meal)
         db.session.commit()
         return redirect(url_for('index'))
-    return render_template('add.html', meals=PREDEFINED_MEALS)
 
-@app.route('/edit/<int:meal_id>', methods=['GET', 'POST'])
-def edit(meal_id):
-    meal = Meal.query.get_or_404(meal_id)
-    if request.method == 'POST':
-        meal.name = request.form['name']
-        quantity = int(request.form.get('quantity', 1))
-        meal.calories = PREDEFINED_MEALS.get(meal.name, 0) * quantity
-        db.session.commit()
-        return redirect(url_for('index'))
-    return render_template('edit.html', meal=meal, meals=PREDEFINED_MEALS)
+    all_meals = Meal.query.order_by(Meal.date.desc()).all()
+    meals_today = [meal for meal in all_meals if meal.date.date() == date.today()]
+    total_today = sum(m.calories for m in meals_today)
 
-@app.route('/delete/<int:meal_id>')
-def delete(meal_id):
-    meal = Meal.query.get_or_404(meal_id)
-    db.session.delete(meal)
-    db.session.commit()
-    return redirect(url_for('index'))
+    return render_template('index.html',
+        meals=PREDEFINED_MEALS,
+        all_meals=all_meals,
+        total_today=total_today,
+        daily_goal=DAILY_GOAL,
+        chart_labels=[m.name for m in all_meals],
+        chart_data=[m.calories for m in all_meals]
+    )
 
 if __name__ == '__main__':
     with app.app_context():
