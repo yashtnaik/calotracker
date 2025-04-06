@@ -1,7 +1,6 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import os
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///calories.db'
@@ -14,38 +13,43 @@ class Meal(db.Model):
     calories = db.Column(db.Integer, nullable=False)
     date = db.Column(db.DateTime, default=datetime.utcnow)
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'calories': self.calories,
-            'date': self.date.isoformat()
-        }
-
-# Move table creation here
-with app.app_context():
-    if not os.path.exists("calories.db"):
-        db.create_all()
-
-@app.route('/meals', methods=['POST'])
-def add_meal():
-    data = request.get_json()
-    name = data.get('name')
-    calories = data.get('calories')
-    if not name or not calories:
-        return jsonify({'error': 'Missing name or calories'}), 400
-    meal = Meal(name=name, calories=calories)
-    db.session.add(meal)
-    db.session.commit()
-    return jsonify(meal.to_dict()), 201
-
-@app.route('/meals', methods=['GET'])
-def get_meals():
+@app.route('/')
+def index():
     meals = Meal.query.order_by(Meal.date.desc()).all()
-    return jsonify([meal.to_dict() for meal in meals])
+    total = db.session.query(db.func.sum(Meal.calories)).scalar() or 0
+    return render_template('index.html', meals=meals, total=total)
 
-@app.route('/total_calories', methods=['GET'])
-def get_total_calories():
+@app.route('/add', methods=['GET', 'POST'])
+def add_meal():
+    if request.method == 'POST':
+        name = request.form['name']
+        calories = request.form['calories']
+        if name and calories:
+            meal = Meal(name=name, calories=int(calories))
+            db.session.add(meal)
+            db.session.commit()
+            return redirect(url_for('index'))
+    return render_template('add.html')
+
+# JSON API
+@app.route('/meals', methods=['GET', 'POST'])
+def meals_api():
+    if request.method == 'POST':
+        data = request.get_json()
+        meal = Meal(name=data['name'], calories=data['calories'])
+        db.session.add(meal)
+        db.session.commit()
+        return jsonify({'message': 'Meal added'}), 201
+    meals = Meal.query.order_by(Meal.date.desc()).all()
+    return jsonify([{
+        'id': m.id,
+        'name': m.name,
+        'calories': m.calories,
+        'date': m.date.isoformat()
+    } for m in meals])
+
+@app.route('/total_calories')
+def total_calories():
     total = db.session.query(db.func.sum(Meal.calories)).scalar() or 0
     return jsonify({'total_calories': total})
 
@@ -53,4 +57,3 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(host='0.0.0.0', port=5000)
-

@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+  <title>Calorie Tracker</title>
+</head>
+<body>
+  <h1>Calorie Tracker</h1>
+  <p><a href="/add">Add Meal</a></p>
+  <h2>Total Calories: {{ total }}</h2>
+  <table border="1" cellpadding="5">
+    <tr>
+      <th>ID</th><th>Name</th><th>Calories</th><th>Date</th>
+    </tr>
+    {% for meal in meals %}
+    <tr>
+      <td>{{ meal.id }}</td>
+      <td>{{ meal.name }}</td>
+      <td>{{ meal.calories }}</td>
+      <td>{{ meal.date.strftime('%Y-%m-%d %H:%M') }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</body>
+</html>
