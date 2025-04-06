@@ -164,7 +164,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     function toggleTheme() {
-        <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
         const body = document.body;
         body.classList.toggle("light-theme");
         localStorage.setItem('theme', body.classList.contains('light-theme') ? 'light' : 'dark');
@@ -172,10 +171,12 @@
 
     // Load saved theme on page load
     window.onload = () => {
-        if (localStorage.getItem('theme') === 'light') {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
             document.body.classList.add('light-theme');
         }
-    }
+    };
 </script>
+
 </body>
 </html>
