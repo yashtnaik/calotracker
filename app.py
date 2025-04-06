@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///calories.db'
@@ -21,9 +22,10 @@ class Meal(db.Model):
             'date': self.date.isoformat()
         }
 
-@app.before_first_request
-def create_tables():
-    db.create_all()
+# Move table creation here
+with app.app_context():
+    if not os.path.exists("calories.db"):
+        db.create_all()
 
 @app.route('/meals', methods=['POST'])
 def add_meal():
