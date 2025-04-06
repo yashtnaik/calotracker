@@ -26,24 +26,56 @@
             </thead>
             <tbody>
               {% for meal in meals %}
-                <tr>
-                  <td>{{ meal.name }}</td>
-                  <td>{{ meal.calories }}</td>
-                  <td>{{ meal.date.strftime('%Y-%m-%d %H:%M') }}</td>
-                </tr>
+              <tr>
+                <td>{{ meal.name }}</td>
+                <td>{{ meal.calories }}</td>
+                <td>{{ meal.date.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>
+                  <a href="{{ url_for('edit', meal_id=meal.id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                  <a href="{{ url_for('delete', meal_id=meal.id) }}" class="btn btn-sm btn-outline-danger"
+                     onclick="return confirm('Are you sure?')">Delete</a>
+                </td>
+              </tr>
               {% endfor %}
             </tbody>
           </table>
           <hr>
           <h5>Total Calories: <span class="text-danger">{{ total }}</span></h5>
+
+          <hr>
+          <h5 class="mt-4">Weekly Calorie Trend</h5>
+          <canvas id="calorieChart" height="100"></canvas>
         {% else %}
           <p>No meals tracked yet. Start by adding one!</p>
         {% endif %}
-        <hr>
-        <h5 class="mt-4">Weekly Calorie Trend</h5>
-        <canvas id="calorieChart" height="100"></canvas>
       </div>
     </div>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctx = document.getElementById('calorieChart')?.getContext('2d');
+    if (ctx) {
+      const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: {{ labels | tojson }},
+          datasets: [{
+            label: 'Calories',
+            data: {{ values | tojson }},
+            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+            borderRadius: 5
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+  </script>
 </body>
 </html>
