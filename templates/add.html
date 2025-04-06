@@ -1,34 +1,36 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Add Meal</title>
-  <script>
-    function updateCalories() {
-      const meals = {{ meals | tojson }};
-      const selectedMeal = document.getElementById("meal").value;
-      const qty = parseInt(document.getElementById("quantity").value) || 1;
-      const calories = meals[selectedMeal] * qty;
-      document.getElementById("calorieDisplay").innerText = calories + " kcal";
-    }
-  </script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-  <h1>Add Indian Meal</h1>
-  <form method="post">
-    <label>Select Meal:</label><br>
-    <select id="meal" name="name" onchange="updateCalories()">
-      {% for meal in meals %}
-        <option value="{{ meal }}">{{ meal }}</option>
-      {% endfor %}
-    </select><br><br>
+<body class="bg-light">
+  <div class="container mt-5">
+    <h2 class="mb-4 text-center">Add a Meal</h2>
 
-    <label>Quantity:</label><br>
-    <input type="number" name="quantity" id="quantity" value="1" min="1" onchange="updateCalories()"><br><br>
+    <div class="card shadow-sm p-4">
+      <form method="POST">
+        <div class="mb-3">
+          <label for="name" class="form-label">Select Meal</label>
+          <select class="form-select" name="name" required>
+            {% for meal, cal in meals.items() %}
+              <option value="{{ meal }}">{{ meal }} ({{ cal }} cal)</option>
+            {% endfor %}
+          </select>
+        </div>
 
-    <strong>Calories: <span id="calorieDisplay">100 kcal</span></strong><br><br>
+        <div class="mb-3">
+          <label for="quantity" class="form-label">Quantity</label>
+          <input type="number" name="quantity" class="form-control" min="1" value="1" required>
+        </div>
 
-    <input type="submit" value="Add Meal">
-  </form>
-  <p><a href="/">← Back</a></p>
+        <div class="d-flex justify-content-between">
+          <a href="/" class="btn btn-secondary">Back</a>
+          <button type="submit" class="btn btn-success">Add Meal</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </body>
 </html>
