@@ -60,8 +60,80 @@
         </div>
     </div>
 
+    <div class="row">
+        <!-- Meal Log Table -->
+    <div class="col-md-7 mb-4">
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Date</th>
+                    <th>Meal</th>
+                    <th>Calories</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for meal in all_meals %}
+                <tr>
+                    <td>{{ meal.date.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>{{ meal.name }}</td>
+                    <td>{{ meal.calories }}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ meal.id }}">Edit</button>
+                        <form method="POST" action="/delete/{{ meal.id }}" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+
+                <!-- Edit Modal -->
+                <div class="modal fade" id="editModal{{ meal.id }}" tabindex="-1" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <form method="POST" action="/edit/{{ meal.id }}">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Edit Meal</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                          <div class="mb-3">
+                            <label class="form-label">Meal</label>
+                            <select name="name" class="form-select">
+                                {% for meal_name in meals %}
+                                    <option value="{{ meal_name }}" {% if meal.name == meal_name %}selected{% endif %}>
+                                        {{ meal_name }} ({{ meals[meal_name] }} cal)
+                                    </option>
+                                {% endfor %}
+                            </select>
+                          </div>
+                          <div class="mb-3">
+                            <label class="form-label">Quantity</label>
+                            <input type="number" name="quantity" class="form-control" value="{{ meal.calories // meals[meal.name] if meal.name in meals }}">
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" class="btn btn-success">Save</button>
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Meal Chart -->
+    <div class="col-md-5">
+        <div class="chart-container">
+            <canvas id="mealChart" height="200"></canvas>
+        </div>
+    </div>
+    </div>
+    </div>
     <!-- Meal Log Table -->
-    <table class="table table-bordered">
+    <!-- <table class="table table-bordered">
         <thead class="table-light">
             <tr>
                 <th>Date</th>
@@ -70,7 +142,7 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody> -->
         {% for meal in all_meals %}
             <tr>
                 <td>{{ meal.date.strftime('%Y-%m-%d %H:%M') }}</td>
@@ -122,10 +194,10 @@
     </table>
 
     <!-- Chart -->
-    <div style="max-width: 300px; margin: auto;">
+    <!-- <div style="max-width: 300px; margin: auto;">
         <canvas id="mealChart" height="300" width="300"></canvas>
     </div>
-</div>
+</div> -->
 
 <script>
     const ctx = document.getElementById('mealChart').getContext('2d');
