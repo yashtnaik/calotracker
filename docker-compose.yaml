@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  calorie_tracker:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - calorie_data:/app/calories.db
+    restart: unless-stopped
+
+volumes:
+  calorie_data:
