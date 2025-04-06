@@ -1,17 +1,21 @@
 # Use official Python base image
 FROM python:3.11-slim
 
-# Set working directory
+# Set working directory in the container
 WORKDIR /app
-COPY templates ./templates
-# Copy files
+
+# Copy dependency definitions
 COPY requirements.txt .
+
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+# Copy the app code and templates into the container
+COPY app.py .
+COPY templates ./templates
 
-# Expose port
+# Expose the Flask port
 EXPOSE 5000
 
-# Run the app
+# Run the application
 CMD ["python", "app.py"]
