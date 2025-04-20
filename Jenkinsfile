@@ -23,7 +23,7 @@ pipeline {
         stage('Tag Docker Image') {
             steps {
                 script {
-                    def tag = "latest"
+                    def tag = "Jenkins"
                     sh "docker tag calotracker_web ${env.IMAGE_NAME}:${tag}"
                 }
             }
