@@ -18,7 +18,7 @@ pipeline {
         stage('Build with Docker Compose') {
             steps {
                 sh "sudo docker compose build"
-                sh "sudo docker tag calotracker ${DOCKER_IMAGE}:${IMAGE_TAG}"
+                sh "sudo docker tag calotracker-2-calotracker:latest ${DOCKER_IMAGE}:${IMAGE_TAG}"
             }
         }
 
