@@ -2,52 +2,46 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "yashtnaik/calotracker"
+        DOCKER_IMAGE = 'yashtnaik/calotracker'
+        IMAGE_TAG = 'v1'
+        DOCKERHUB_CREDENTIALS = credentials('DockerHub') // DockerHub credentials ID
+        GIT_CREDENTIALS = credentials('GitHub') // GitHub credentials ID
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git credentialsId: 'GitHub', url: 'https://github.com/yashtnaik/calotracker.git'
+                git branch: 'main', url: 'https://github.com/yashtnaik/calotracker.git'
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build with Docker Compose') {
             steps {
-                script {
-                    sh 'docker-compose build'
-                }
-            }
-        }
-
-        stage('Tag Docker Image') {
-            steps {
-                script {
-                    def tag = "Jenkins"
-                    sh "docker tag calotracker_web ${env.IMAGE_NAME}:${tag}"
-                }
+                sh "docker-compose build"
+                sh "docker tag calorie_tracker ${DOCKER_IMAGE}:${IMAGE_TAG}"
             }
         }
 
         stage('Push to DockerHub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'DockerHub', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
-                    sh '''
-                        echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
-                        docker push ${IMAGE_NAME}:latest
-                        docker logout
-                    '''
-                }
+                sh """
+                    echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
+                    docker push ${DOCKER_IMAGE}:${IMAGE_TAG}
+                """
             }
         }
-    }
 
-    post {
-        success {
-            echo "✅ Docker image pushed successfully to DockerHub."
-        }
-        failure {
-            echo "❌ Pipeline failed."
+        stage('Update deployment.yaml') {
+            steps {
+                sh """
+                    sed -i 's|image: ${DOCKER_IMAGE}:.*|image: ${DOCKER_IMAGE}:${IMAGE_TAG}|' manifest/deployment.yaml
+                    git config user.name "jenkins"
+                    git config user.email "jenkins@local"
+                    git add manifest/deployment.yaml
+                    git commit -m "Update image tag to ${IMAGE_TAG}"
+                    git push https://${GIT_CREDENTIALS_USR}:${GIT_CREDENTIALS_PSW}@github.com/yashtnaik/calotracker.git HEAD:main
+                """
+            }
         }
     }
 }
