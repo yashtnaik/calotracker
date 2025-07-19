@@ -27,7 +27,7 @@ pipeline {
             steps {
                 sh """
                     sudo echo ${DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${DOCKERHUB_CREDENTIALS_USR} --password-stdin
-                    sudo docker push yashtnaik/${DOCKER_IMAGE}:${IMAGE_TAG}
+                    sudo docker push ${DOCKER_IMAGE}:${IMAGE_TAG}
                 """
             }
         }
