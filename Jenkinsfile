@@ -17,8 +17,8 @@ pipeline {
 
         stage('Build with Docker Compose') {
             steps {
-                sh "docker compose build"
-                sh "docker tag calorie_tracker ${DOCKER_IMAGE}:${IMAGE_TAG}"
+                sh "sudo docker compose build"
+                sh "sudo docker tag calorie_tracker ${DOCKER_IMAGE}:${IMAGE_TAG}"
             }
         }
 
