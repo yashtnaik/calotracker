@@ -9,14 +9,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: read jenkinsfile
-        run: | 
-              cat Jenkinsfile
-              ls -lrth
-
-      - name: install cowsay
-        run: sudo apt-get install cowsay -y
-      - name: generate ascii art
-        run: | 
-          cowsay -f dragon "Hello, World!" > output.txt
-          cat output.txt
+      - name: execute shell script
+        run: |
+          chmod +x test-script.sh
+          ./test-script.sh
