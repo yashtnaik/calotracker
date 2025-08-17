@@ -27,7 +27,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: output
-          path: output.txt
       - name: Display output.txt
         run: ls -lrth output.txt
 
@@ -39,6 +38,5 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: output
-          path: output.txt
       - name: Display output
         run: cat output.txt
