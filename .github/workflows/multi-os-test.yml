@@ -12,13 +12,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: docker info
-        run: docker info
-      - name: test docker image on ${{ matrix.os }}
         run: |
               if [ "${{ matrix.os }}" == "ubuntu-latest" || "${{ matrix.os }}" == "macos-latest" ]; then
-                docker run --rm ${{ matrix.image }}
+                docker info
                 sleep 60s
               elif [ "${{ matrix.os }}" == "windows-latest" ]; then
-                docker run --rm ${{ matrix.image }}
+                docker info
                 timeout /t 60
               fi
+      - name: test docker image on ${{ matrix.os }}
+        run: docker run --rm ${{ matrix.image }}
