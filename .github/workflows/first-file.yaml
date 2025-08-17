@@ -13,3 +13,32 @@ jobs:
         run: |
           chmod +x test-script.sh
           ./test-script.sh
+      - name: Upload output.txt
+        uses: actions/upload-artifact@v2
+        with:
+          name: output
+          path: output.txt
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download output.txt
+        uses: actions/download-artifact@v2
+        with:
+          name: output
+          path: output.txt
+      - name: Display output.txt
+        run: ls -lrth output.txt
+
+  Deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download output.txt
+        uses: actions/download-artifact@v2
+        with:
+          name: output
+          path: output.txt
+      - name: Display output.txt
+        run: cat output.txt
