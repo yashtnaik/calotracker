@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: execute shell script
         run: |
           chmod +x test-script.sh
@@ -24,7 +24,7 @@ jobs:
     needs: build
     steps:
       - name: Download output.txt
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: output
           path: output.txt
@@ -33,10 +33,10 @@ jobs:
 
   Deploy:
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build, test]
     steps:
       - name: Download output.txt
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: output
           path: output.txt
