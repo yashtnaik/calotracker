@@ -2,13 +2,6 @@ name: Build and Push Docker Image
 
 on:
   workflow_dispatch:
-  #   inputs:
-  #     docker_username:
-  #       description: 'Docker Hub username'
-  #       required: true
-  #     docker_password:
-  #       description: 'Docker Hub password'
-  #       required: true
   # schedule:
   #   - cron: '*/2 * * * *'
   # push:
@@ -36,7 +29,7 @@ jobs:
     needs: build
     concurrency:
       group: production-deploy
-      cancel-in-progress: true
+      cancel-in-progress: false   #false will wait for the previous job to complete
     steps:
       - name: Push Docker image
         run: |
