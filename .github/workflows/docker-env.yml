@@ -1,1 +1,30 @@
+name: Build and Push Docker Image
 
+on:
+  push:
+    branches:
+      - main
+env:
+  DOCKER_USERNAME: yashtnaik
+  DOCKER_PASSWORD: beshte-re-1993
+  IMAGE_NAME: Calotracker
+  TAG: latest
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        run: echo "${{ env.DOCKER_PASSWORD }}" | docker login -u "${{ env.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build Docker image
+        run: |
+          echo docker build -t ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} .
+
+      - name: Push Docker image
+        run: |
+          docker push ${{ env.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
