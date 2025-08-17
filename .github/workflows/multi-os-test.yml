@@ -12,6 +12,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: docker info
-        run: docker info
+        run: |
+              if [ "${{ matrix.os }}" == "macos-latest" ]; then
+                sleep 60s
+                docker info
+              else
+                docker info
+              fi
       - name: test docker image on ${{ matrix.os }}
         run: docker run --rm ${{ matrix.image }}
