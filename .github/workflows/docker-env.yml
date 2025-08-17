@@ -1,16 +1,16 @@
 name: Build and Push Docker Image
 
 on:
-  workflow_dispatch:
-    inputs:
-      docker_username:
-        description: 'Docker Hub username'
-        required: true
-      docker_password:
-        description: 'Docker Hub password'
-        required: true
-  # schedule:
-  #   - cron: '*/1 * * * *'
+  # workflow_dispatch:
+  #   inputs:
+  #     docker_username:
+  #       description: 'Docker Hub username'
+  #       required: true
+  #     docker_password:
+  #       description: 'Docker Hub password'
+  #       required: true
+  schedule:
+    - cron: '*/2 * * * *'
   # push:
   #   branches:
   #     - main
