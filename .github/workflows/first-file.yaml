@@ -13,7 +13,7 @@ jobs:
         run: | 
               cat Jenkinsfile
               ls -lrth
-              grep -i Jenkinsfile
+
       - name: generate ascii art
         run: |
           echo "   ____              _           _   "
