@@ -34,4 +34,4 @@ jobs:
       - name: Push Docker image
         run: |
               echo 'docker push ${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}'
-              sleep 350
+              sleep 90
