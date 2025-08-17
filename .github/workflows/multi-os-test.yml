@@ -7,11 +7,18 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         image: [alpine, hello-world]
     runs-on: ${{ matrix.os }}
     steps:
       - name: docker info
         run: docker info
       - name: test docker image on ${{ matrix.os }}
-        run: docker run --rm ${{ matrix.image }}
+        run: |
+              if [ "${{ matrix.os }}" == "ubuntu-latest" || "${{ matrix.os }}" == "macos-latest" ]; then
+                docker run --rm ${{ matrix.image }}
+                sleep 60s
+              elif [ "${{ matrix.os }}" == "windows-latest" ]; then
+                docker run --rm ${{ matrix.image }}
+                timeout /t 60
+              fi
