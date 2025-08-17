@@ -14,7 +14,7 @@ jobs:
               cat Jenkinsfile
               ls -lrth
 
-      i name: install cowsay
+      - name: install cowsay
         run: sudo apt-get install cowsay -y
       - name: generate ascii art
         run: cowsay -f dragon "Hello, World!" > output.txt
