@@ -1,45 +1,13 @@
-name: Docker Build and Push
-
+name: First Workflow
 on:
   push:
     branches:
       - main
-
-env:
-  DOCKER_IMAGE: yashtnaik/calotracker
-  IMAGE_TAG: v1
-
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Log in to DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-      - name: Build Docker image with Compose
-        run: |
-          docker compose build
-          docker tag calotracker-2-calotracker:latest $DOCKER_IMAGE:$IMAGE_TAG
-          docker rmi calotracker-2-calotracker
-
-      - name: Push Docker image to DockerHub
-        run: docker push $DOCKER_IMAGE:$IMAGE_TAG
-
-      - name: Update deployment.yaml
-        run: |
-          sed -i "s|image: $DOCKER_IMAGE:.*|image: $DOCKER_IMAGE:$IMAGE_TAG|" manifest/deployment.yaml
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add manifest/deployment.yaml
-          git commit -m "Update image tag to $IMAGE_TAG"
-          git push https://${{ secrets.GITHUB_USERNAME }}:${{ secrets.GITHUB_TOKEN }}@github.com/yashtnaik/calotracker.git HEAD:main
+        uses: actions/checkout@v2
+      - name: read jenkinsfile
+        run: cat Jenkinsfile
