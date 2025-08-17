@@ -1,0 +1,9 @@
+How to login to Plural sight:
+ 
+Open this URL in Browser https://app.pluralsight.com/
+with your company or school (SSO)
+ 
+In the text box for company name
+	type your ltimindtree email id in firstname.lastname@ltimindtree.com format
+
+•	Built Python and Bash scripts for failover testing, image validation, log parsing, and automated remediation of incidents.
