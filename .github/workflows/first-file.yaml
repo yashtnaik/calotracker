@@ -10,5 +10,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: read jenkinsfile
-        run: | cat Jenkinsfile
-               ls -lrth | grep Jenkinsfile
+        run: | 
+              cat Jenkinsfile
+              ls -lrth
+              grep -i Jenkinsfile
+      - name: generate ascii art
+        run: |
+          echo "   ____              _           _   "
+          echo "  / ___|  ___  _ __ | | ___  ___| |_ "
+          echo " | |     / _ \| '_ \| |/ _ \/ __| __|"
+          echo " | |___ | (_) | | | | |  __/\__ \ |_ "
+          echo "  \____| \___/|_| |_|_|\___||___/\__|"
+          > output.txt
