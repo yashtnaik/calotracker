@@ -10,4 +10,5 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: read jenkinsfile
-        run: cat Jenkinsfile
+        run: | cat Jenkinsfile
+               ls -lrth | grep Jenkinsfile
