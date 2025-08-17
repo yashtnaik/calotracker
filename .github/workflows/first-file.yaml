@@ -17,4 +17,6 @@ jobs:
       - name: install cowsay
         run: sudo apt-get install cowsay -y
       - name: generate ascii art
-        run: cowsay -f dragon "Hello, World!" > output.txt
+        run: | 
+          cowsay -f dragon "Hello, World!" > output.txt
+          cat output.txt
