@@ -1,7 +1,7 @@
 name: Build and Push Docker Image
 
 on:
-  # workflow_dispatch:
+  # workflow_dispatch:          #manual trigger option
   # schedule:
   #   - cron: '*/2 * * * *'
   push:
@@ -35,4 +35,4 @@ jobs:
       - name: Push Docker image
         run: |
               echo 'docker push ${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}'
-              sleep 150
+              sleep 180s

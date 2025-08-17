@@ -1,0 +1,19 @@
+name: multi-os-test
+on:
+  push:
+    branches:
+      - main
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        image: [alpine, hello-world]
+      runs-on: ${{ matrix.os }}
+    steps:
+      - name: docker info
+        run: docker info
+      - name: test docker image
+        run: |
+          echo "Testing on ${{ matrix.os }} with image ${{ matrix.image }}"
+          docker run --rm ${{ matrix.image }} echo "Hello from ${{ matrix.image }} on ${{ matrix.os }}"
