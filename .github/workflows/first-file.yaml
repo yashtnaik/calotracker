@@ -40,5 +40,5 @@ jobs:
         with:
           name: output
           path: output.txt
-      - name: Display output.txt
+      - name: Display output
         run: cat output.txt
