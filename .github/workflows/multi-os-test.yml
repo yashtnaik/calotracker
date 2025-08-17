@@ -6,18 +6,17 @@ on:
 jobs:
   test:
     strategy:
+      fail-fast: false    #by default it is true, which means that if a job fails, the entire matrix is canceled, use fail-fast: false to continue with other jobs
+      max-parallel: 2
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         image: [alpine, hello-world]
+      exclude: 
+        - os: windows-latest
+          image: alpine
     runs-on: ${{ matrix.os }}
     steps:
       - name: docker info
-        run: |
-              if [ "${{ matrix.os }}" == "macos-latest" ]; then
-                sleep 60s
-                docker info
-              else
-                docker info
-              fi
+        run: docker info
       - name: test docker image on ${{ matrix.os }}
         run: docker run --rm ${{ matrix.image }}
