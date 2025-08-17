@@ -1,7 +1,7 @@
 name: Build and Push Docker Image
 
 on:
-  # workflow_dispatch:
+  workflow_dispatch:
   #   inputs:
   #     docker_username:
   #       description: 'Docker Hub username'
@@ -9,8 +9,8 @@ on:
   #     docker_password:
   #       description: 'Docker Hub password'
   #       required: true
-  schedule:
-    - cron: '*/2 * * * *'
+  # schedule:
+  #   - cron: '*/2 * * * *'
   # push:
   #   branches:
   #     - main
@@ -31,9 +31,14 @@ jobs:
 
       - name: Build Docker image
         run: echo 'docker build -t ${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} .'
-  push:
+  deploy:
     runs-on: ubuntu-latest
     needs: build
+    concurrency:
+      group: production-deploy
+      cancel-in-progress: true
     steps:
       - name: Push Docker image
-        run: echo 'docker push ${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}'
+        run: |
+              echo 'docker push ${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}'
+              sleep 350
