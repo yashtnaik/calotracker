@@ -11,9 +11,9 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         image: [alpine, hello-world]
-      exclude: 
-        - os: windows-latest
-          image: alpine
+        exclude: 
+          - os: windows-latest
+            image: alpine
     runs-on: ${{ matrix.os }}
     steps:
       - name: docker info
