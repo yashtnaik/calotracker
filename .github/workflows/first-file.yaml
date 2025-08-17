@@ -40,4 +40,6 @@ jobs:
         with:
           name: output
       - name: Display output
-        run: cat output.txt
+        run: |
+              cat output.txt
+              sleep 60s
