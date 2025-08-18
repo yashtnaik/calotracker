@@ -5,15 +5,15 @@ on:
     branches:
       - main
       - '!feature/*'   #ignoring push on all branches starting with feature/
-    branches-ignore:
-      - '!bugfix/*'     #ignoring push on all branches starting with bugfix/
+    # branches-ignore:
+    #   - '!bugfix/*'     #ignoring push on all branches starting with bugfix/
 
   workflow_dispatch:
     branches:
       - main
-    branches-ignore:
-      - '!feature/*'
-      - '!bugfix/*'
+    # branches-ignore:
+    #   - '!feature/*'
+    #   - '!bugfix/*'
 
   pull_request:
     types:
