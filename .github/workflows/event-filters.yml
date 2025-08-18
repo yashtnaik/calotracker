@@ -1,0 +1,36 @@
+name: event filters
+
+on:
+  push:
+    branches:
+      - main
+      - '!feature/*'   #ignoring push on all branches starting with feature/
+    branches-ignore:
+      - '!bugfix/*'     #ignoring push on all branches starting with bugfix/
+
+  workflow_dispatch:
+    branches:
+      - main
+    branches-ignore:
+      - '!feature/*'
+      - '!bugfix/*'
+
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    paths:
+      - 'Dockerfile'
+    path-ignore:
+      - 'README.md'
+      - 'docs/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build
+        run: echo "Building..."
