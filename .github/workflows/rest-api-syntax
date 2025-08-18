@@ -1,0 +1,7 @@
+curl -Lk \
+  -H "Accept: application/vnd.github+json" \
+  -H "Authorization: Bearer <token>" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  https://api.github.com/repos/yashtnaik/lab2/actions/jobs/48278577649/logs
+
+https://github.com/yashtnaik/lab2/actions/runs/17032732130/job/48278577649
