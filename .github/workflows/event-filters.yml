@@ -1,10 +1,10 @@
 name: event filters
 
 on:
-  push:
-    branches:
-      - main
-      - '!feature/*'   #ignoring push on all branches starting with feature/
+  # push:
+  #   branches:
+  #     - main
+  #     - '!feature/*'   #ignoring push on all branches starting with feature/
     # branches-ignore:
     #   - '!bugfix/*'     #ignoring push on all branches starting with bugfix/
 
@@ -19,7 +19,7 @@ on:
         description: 'The environment to deploy to staging/production/testing'
         required: true
         default: 'staging'
-        type: environment                         #will display as environment selection
+        type: string                         #will display as environment selection
       test-type:
         description: 'The type of tests to run'
         required: true
