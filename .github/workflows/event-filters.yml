@@ -19,7 +19,7 @@ on:
         description: 'The environment to deploy to staging/production/testing'
         required: true
         default: 'staging'
-        type: string                         #will display as environment selection
+        type: environment                         #will display as environment selection
       test-type:
         description: 'The type of tests to run'
         required: true
