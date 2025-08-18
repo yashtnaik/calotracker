@@ -67,5 +67,5 @@ jobs:
               echo "message: ${{ inputs.message }}"
 
       - name: if example_input is true
-        if: ${{ inputs.example_input == 'true' }}
+        if: ${{ inputs.example_input == true }}
         run: echo "Example input is true"
