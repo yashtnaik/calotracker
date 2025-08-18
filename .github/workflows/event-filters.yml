@@ -40,6 +40,13 @@ on:
     #   - '!feature/*'
     #   - '!bugfix/*'
 
+  # schedule:
+  #   cron: '0 0 * * *'
+
+  repository_dispatch:
+    types:
+      - deploy
+
   pull_request:
     types:
       - opened
