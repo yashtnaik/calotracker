@@ -15,7 +15,9 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+      with:
+        persist-credentials: false
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
@@ -40,8 +42,6 @@ jobs:
       env:
         GH_USERNAME: ${{ vars.GH_USERNAME }}
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        DOCKER_IMAGE: ${{ env.DOCKER_IMAGE }}
-        IMAGE_TAG: ${{ env.IMAGE_TAG }}
       run: |
         sed -i "s|image: .*|image: ${DOCKER_IMAGE}:${IMAGE_TAG}|" manifest/deployment.yaml
         git config --global user.name "${GH_USERNAME}"
@@ -50,3 +50,4 @@ jobs:
         git add manifest/deployment.yaml
         git commit -m "Update image tag to ${IMAGE_TAG}"
         git push origin HEAD:main
+
