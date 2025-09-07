@@ -38,17 +38,15 @@ jobs:
 
     - name: Update deployment.yaml
       env:
-            GH_USERNAME: ${{ vars.GH_USERNAME }}
-            GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        GH_USERNAME: ${{ vars.GH_USERNAME }}
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        DOCKER_IMAGE: ${{ env.DOCKER_IMAGE }}
+        IMAGE_TAG: ${{ env.IMAGE_TAG }}
       run: |
-            sed -i "s|image: .*|image: ${{ env.DOCKER_IMAGE }}:${{ env.IMAGE_TAG }}|" manifest/deployment.yaml
-
-            git config --global user.name "$GH_USERNAME"
-            git config --global user.email "$GH_USERNAME@users.noreply.github.com"
-
-            git remote set-url origin https://$GH_USERNAME:$GH_TOKEN@github.com/yashtnaik/calotracker.git
-
-            git add manifest/deployment.yaml
-            git commit -m "Update image tag to ${{ env.IMAGE_TAG }}" || echo "No changes to commit"
-            git push origin HEAD:main
-
+        sed -i "s|image: .*|image: ${DOCKER_IMAGE}:${IMAGE_TAG}|" manifest/deployment.yaml
+        git config --global user.name "${GH_USERNAME}"
+        git config --global user.email "${GH_USERNAME}@users.noreply.github.com"
+        git remote set-url origin https://${GH_USERNAME}:${GH_TOKEN}@github.com/yashtnaik/calotracker.git
+        git add manifest/deployment.yaml
+        git commit -m "Update image tag to ${IMAGE_TAG}"
+        git push origin HEAD:main
