@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: calotracker
-          image: yashtnaik/calotracker:87cf351c47bf9f244b7a7a37b140ad56125e29e3
+          image: yashtnaik/calotracker:ee23d9b19bc212e65b00e455d38f04ee7d688ee5
           ports:
             - containerPort: 80
 
