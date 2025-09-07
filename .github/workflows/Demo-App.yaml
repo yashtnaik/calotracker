@@ -40,7 +40,7 @@ jobs:
       run: |
         sed -i "s|image: .*|image: ${{ env.DOCKER_IMAGE }}:${{ env.IMAGE_TAG }}|" manifest/deployment.yaml
         git config --global user.name "${{ vars.GH_USERNAME }}"
-        git config --global user.email "${{ vars.GH_USERNAME@gmail.com }}"
+        git config --global user.email '"${{ vars.GH_USERNAME }}"@gmail.com'
         git remote set-url origin https://${{ vars.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/yashtnaik/calotracker.git
         git add manifest/deployment.yaml
         git commit -m "Update image tag to ${{ env.IMAGE_TAG }}"
