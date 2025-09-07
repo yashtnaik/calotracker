@@ -43,4 +43,5 @@ jobs:
         git config user.email "actions@github.com"
         git add manifest/deployment.yaml
         git commit -m "Update image tag to ${{ env.IMAGE_TAG }}"
-        git push https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/yashtnaik/calotracker.git HEAD:main
+        git push https://${{ vars.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/yashtnaik/calotracker.git HEAD:main
+
