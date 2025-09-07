@@ -29,8 +29,8 @@ jobs:
     - name: Build Docker Image with Compose
       run: |
         docker compose build
-        docker tag calotracker-2-calotracker:latest ${{ env.DOCKER_IMAGE }}:${{ env.IMAGE_TAG }}
-        docker rmi calotracker-2-calotracker
+        docker tag calotracker:latest ${{ env.DOCKER_IMAGE }}:${{ env.IMAGE_TAG }}
+        docker rmi calotracker
 
     - name: Push Docker Image
       run: |
