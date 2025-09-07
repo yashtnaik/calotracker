@@ -1,0 +1,46 @@
+name: Docker Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  DOCKER_IMAGE: yashtnaik/calotracker
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ vars.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build Docker Image with Compose
+      run: |
+        docker compose build
+        docker tag calotracker-2-calotracker:latest ${{ env.DOCKER_IMAGE }}:${{ env.IMAGE_TAG }}
+        docker rmi calotracker-2-calotracker
+
+    - name: Push Docker Image
+      run: |
+        docker push ${{ env.DOCKER_IMAGE }}:${{ env.IMAGE_TAG }}
+
+    - name: Update deployment.yaml
+      run: |
+        sed -i 's|image: .*$|image: ${{ env.DOCKER_IMAGE }}:${{ env.IMAGE_TAG }}|' manifest/deployment.yaml
+        git config user.name "github-actions"
+        git config user.email "actions@github.com"
+        git add manifest/deployment.yaml
+        git commit -m "Update image tag to ${{ env.IMAGE_TAG }}"
+        git push https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/yashtnaik/calotracker.git HEAD:main
